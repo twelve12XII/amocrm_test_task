@@ -1,0 +1,9 @@
+{
+    "liveServer.settings.root": "/",
+    "liveServer.settings.https": {
+        "enable": true,
+        "cert": "C:/Users/user/Desktop/tt/localhost.pem",
+        "key": "C:/Users/user/Desktop/tt/localhost.key",
+        "passphrase": "stop"
+    }
+}
