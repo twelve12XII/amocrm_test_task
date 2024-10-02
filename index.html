@@ -12,46 +12,82 @@
     />
   </head>
   <body>
-    <div id="cards-list"></div>
+    <div>
+      <table class="table">
+        <thead>
+          <th>Название</th>
+          <th>ID</th>
+          <th>Бюджет</th>
+        </thead>
+        <tbody id="cards-list"></tbody>
+      </table>
+    </div>
     <script>
-      function getRequest() {
-        fetch("https://irishkanikitina2002.amocrm.ru/api/v4/leads", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-            Authorization:
-              "Bearer " +
-              "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjIzY2Q0Mzk1MmE5ZTUyNzMyYzQ5MmY2M2ZkYjgyZTgzNmNiYzY0YTYzYTJhZTAzNWE5YTZiOTZjNzI0Y2M2Mjk3MzNkNzA2MzExNjdmMzYxIn0.eyJhdWQiOiJkZjA3ZTEwZS1jODhhLTQ5YzItYjVhNi0zZDg4ZDFlOGNjZjgiLCJqdGkiOiIyM2NkNDM5NTJhOWU1MjczMmM0OTJmNjNmZGI4MmU4MzZjYmM2NGE2M2EyYWUwMzVhOWE2Yjk2YzcyNGNjNjI5NzMzZDcwNjMxMTY3ZjM2MSIsImlhdCI6MTcyNzc5NDc4NywibmJmIjoxNzI3Nzk0Nzg3LCJleHAiOjE3Mjc4ODExODcsInN1YiI6IjExNTgxMTE4IiwiZ3JhbnRfdHlwZSI6IiIsImFjY291bnRfaWQiOjMxOTc4ODcwLCJiYXNlX2RvbWFpbiI6ImFtb2NybS5ydSIsInZlcnNpb24iOjIsInNjb3BlcyI6WyJwdXNoX25vdGlmaWNhdGlvbnMiLCJmaWxlcyIsImNybSIsImZpbGVzX2RlbGV0ZSIsIm5vdGlmaWNhdGlvbnMiXSwiaGFzaF91dWlkIjoiZTYzNTM5N2UtZWFmYS00NGMxLTk4ZDEtNTE4NzRhMzhkYTFmIiwiYXBpX2RvbWFpbiI6ImFwaS1iLmFtb2NybS5ydSJ9.qOLEeZs4L_Q_GMVodbl1zUx4vz0t8njMzDr6N7hN1an3c9nhzHnzkwdYIFpgKuSMYMCCk3xcfH8s-9G1UhJEyc-qb3CjHjOitF0bT5WM7AcXJnSS3-D9kjxlSy_fptJIiKZTNeFE2unK-506sHBt0BaCTpwS0_1yomasMVVx5yCVVvZRqomNKYcQlofxvWjjTtpO1_guUyGZ3Yth8xpoPUUHsEb1UShnngqCiYa-ICyIw8e5_zPY4nkDDZA8_ucPw76RlshzwtT67ziDdklsf18u_BIHVML4dAJ24RWDQC034-ZGDTXr6bKaQ6pmuwKAMLYxHxCLhhyWaYMBa2Klew",
-          },
-        })
-          .then((response) => response.json())
-          .then((result) => {
-            let table = '<table class="table">';
-            result._embedded.leads.forEach((card, index) => {
-              table += `
-              <tr><tbody><td>
-                <div class="card" style="width: 18rem;">
-                  <div class="card-body" id="${card.id}"" onclick="handleCardClick(this.id)">
-                    <h5 class="card-title" id="name">${card.name}</h5>
-                    <p class="card-text" id="id">${card.id}</p>
-                    <p class="card-text" id="price">${card.price}</p>
-                  </div>
-                </div>
-              </td></tr></tbody>`;
-            });
-            table += "</table>";
-            document.getElementById("cards-list").innerHTML = table;
-          })
-          .catch((e) => {
-            console.log(e);
-            throw e;
+      (async () => {
+        let page_count = 0;
+        let cards_count = 0;
+        async function getRequest() {
+          page_count += 1;
+          let params = new URLSearchParams({
+            page: page_count,
+            limit: 3,
           });
-      }
-      getRequest();
+          const response = await fetch(
+            `https://irishkanikitina2002.amocrm.ru/api/v4/leads?${params}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json;charset=utf-8",
+                Authorization:
+                  "Bearer " +
+                  "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjIzY2Q0Mzk1MmE5ZTUyNzMyYzQ5MmY2M2ZkYjgyZTgzNmNiYzY0YTYzYTJhZTAzNWE5YTZiOTZjNzI0Y2M2Mjk3MzNkNzA2MzExNjdmMzYxIn0.eyJhdWQiOiJkZjA3ZTEwZS1jODhhLTQ5YzItYjVhNi0zZDg4ZDFlOGNjZjgiLCJqdGkiOiIyM2NkNDM5NTJhOWU1MjczMmM0OTJmNjNmZGI4MmU4MzZjYmM2NGE2M2EyYWUwMzVhOWE2Yjk2YzcyNGNjNjI5NzMzZDcwNjMxMTY3ZjM2MSIsImlhdCI6MTcyNzc5NDc4NywibmJmIjoxNzI3Nzk0Nzg3LCJleHAiOjE3Mjc4ODExODcsInN1YiI6IjExNTgxMTE4IiwiZ3JhbnRfdHlwZSI6IiIsImFjY291bnRfaWQiOjMxOTc4ODcwLCJiYXNlX2RvbWFpbiI6ImFtb2NybS5ydSIsInZlcnNpb24iOjIsInNjb3BlcyI6WyJwdXNoX25vdGlmaWNhdGlvbnMiLCJmaWxlcyIsImNybSIsImZpbGVzX2RlbGV0ZSIsIm5vdGlmaWNhdGlvbnMiXSwiaGFzaF91dWlkIjoiZTYzNTM5N2UtZWFmYS00NGMxLTk4ZDEtNTE4NzRhMzhkYTFmIiwiYXBpX2RvbWFpbiI6ImFwaS1iLmFtb2NybS5ydSJ9.qOLEeZs4L_Q_GMVodbl1zUx4vz0t8njMzDr6N7hN1an3c9nhzHnzkwdYIFpgKuSMYMCCk3xcfH8s-9G1UhJEyc-qb3CjHjOitF0bT5WM7AcXJnSS3-D9kjxlSy_fptJIiKZTNeFE2unK-506sHBt0BaCTpwS0_1yomasMVVx5yCVVvZRqomNKYcQlofxvWjjTtpO1_guUyGZ3Yth8xpoPUUHsEb1UShnngqCiYa-ICyIw8e5_zPY4nkDDZA8_ucPw76RlshzwtT67ziDdklsf18u_BIHVML4dAJ24RWDQC034-ZGDTXr6bKaQ6pmuwKAMLYxHxCLhhyWaYMBa2Klew",
+              },
+            }
+          );
+          await response
+            .json()
+            .then((result) => {
+              cards_count = Object.keys(result._embedded.leads).length;
+              let table = "";
+              result._embedded.leads.forEach((card, index) => {
+                table += `
+              <tr class="card-body" id="${card.id}"" onclick="handleCardClick(this.id)">
+                  <td id="name">${card.name}</td>
+                  <td id="id">${card.id}</td>
+                  <td id="price">${card.price}</td>
+              </tr>`;
+              });
+              document.getElementById("cards-list").innerHTML += table;
+            })
+            .catch((e) => {
+              console.log(e);
+              throw e;
+            });
+        }
+        await getRequest();
+        while (cards_count == 3) {
+          cards_count = 0;
+          setTimeout(await getRequest(), 1000);
+        }
+      })();
     </script>
     <script>
-      function handleCardClick(el) {
-       fetch(`https://irishkanikitina2002.amocrm.ru/api/v4/leads/${el}`, {
+      function handleCardClick(thisId) {
+        lastCard = JSON.parse(sessionStorage.getItem("lastCard"));
+        if (lastCard)
+          document.getElementById(lastCard.id).innerHTML = `
+                    <td id="name">${lastCard.name}</td>
+                    <td id="id">${lastCard.id}</td>
+                    <td id="price">${lastCard.price}</td>
+             `;
+        document.getElementById(
+          thisId
+        ).innerHTML = `<td colspan="3" class="text-center">
+          <div class="spinner-border " role="status" >
+            <span class="visually-hidden">Загрузка...</span>
+          </div>
+        </td>`;
+        fetch(`https://irishkanikitina2002.amocrm.ru/api/v4/leads/${thisId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json;charset=utf-8",
@@ -62,13 +98,59 @@
         })
           .then((response) => response.json())
           .then((result) => {
-            console.log(result)
+            sessionStorage.setItem(
+              "lastCard",
+              JSON.stringify({
+                name: result.name,
+                price: result.price,
+                id: result.id,
+              })
+            );
+            const date = new Date(result.created_at * 1000);
+            const year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            month = month.toLocaleString("en-US", {
+              minimumIntegerDigits: 2,
+              useGrouping: false,
+            });
+            let day = date.getDate();
+            day = day.toLocaleString("en-US", {
+              minimumIntegerDigits: 2,
+              useGrouping: false,
+            });
+            const dateString = `${day}.${month}.${year}`;
+            let color = "#000";
+            if (result.closest_task_at) {
+              if (
+                new Date().setHours(0, 0, 0, 0) >
+                new Date(result.closest_task_at * 1000).setHours(0, 0, 0, 0)
+              )
+                color = "#C71212";
+              else if (
+                new Date().setHours(0, 0, 0, 0) <
+                new Date(result.closest_task_at * 1000).setHours(0, 0, 0, 0)
+              )
+                color = "#CCC61F";
+              else color = "#1FCC24";
+            } else color = "#C71212";
+
+            document.getElementById(thisId).innerHTML = `
+            <td colspan="3" >
+              <div class="card" style="width: 100%">
+                <div class="card-body">
+                    <h5 class="card-title" id="name">Название: ${result.name}</h5>
+                    <p class="card-text" id="id">Id: ${result.id}</p>
+                    <p class="card-text" id="date">Дата создания: ${dateString}</p>
+                    <svg width="20px" height="20px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--twemoji" preserveAspectRatio="xMidYMid meet"><circle fill="${color}" cx="25" cy="25" r="20"></circle></svg>
+                </div>
+              </div>
+             </td>
+             `;
           })
           .catch((e) => {
             console.log(e);
             throw e;
           });
-        console.log(el);
       }
     </script>
     <script
