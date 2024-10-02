@@ -55,20 +55,19 @@
       }
 
       function makeColor(closest_task_at) {
-        let color = "#000";
         if (closest_task_at) {
           if (
             new Date().setHours(0, 0, 0, 0) >
             new Date(closest_task_at * 1000).setHours(0, 0, 0, 0)
           )
-            return (color = "#C71212");
+            return "#C71212";
           else if (
             new Date().setHours(0, 0, 0, 0) <
             new Date(closest_task_at * 1000).setHours(0, 0, 0, 0)
           )
-            return (color = "#CCC61F");
-          else return (color = "#1FCC24");
-        } else return (color = "#C71212");
+            return "#CCC61F";
+          else return "#1FCC24";
+        } else return "#C71212";
       }
 
       function handleCardClick(thisId) {
